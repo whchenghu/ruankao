@@ -1,0 +1,1216 @@
+{
+  "title": "【软件设计师】备考",
+  "meta": {
+    "version": "1.0",
+    "updatedAt": "2026-02-02"
+  },
+  "modules": [
+    {
+      "id": "data-structures",
+      "name": "数据结构",
+      "topics": [
+        {
+          "id": "stack",
+          "name": "栈出栈合法序列",
+          "points": []
+        },
+        {
+          "id": "queue",
+          "name": "队列FIFO/循环队列",
+          "points": []
+        },
+        {
+          "id": "list-complexity",
+          "name": "顺序表vs链表插入删除复杂度",
+          "points": []
+        },
+        {
+          "id": "bt-traversal",
+          "name": "二叉树前中后序",
+          "points": []
+        },
+        {
+          "id": "complete-bt",
+          "name": "完全二叉树结点数",
+          "points": [
+            {
+              "id": "ds-tree-degree-leaves",
+              "title": "树的度与叶子结点数",
+              "content": "树是连通且无环的结构。有根树中，结点的度=孩子数，叶子结点度为0。\n性质：树中边的条数比结点总数少1条。\n等价关系：孩子数总和等于边数。\n推导式：各度结点的孩子数总和=结点总数-1，且结点总数=非叶结点数+叶子数。",
+              "summary": "树中孩子数总和等于边数，边数比结点总数少1，可由各度结点数求叶子数。",
+              "conclusion": "结论：叶子数=孩子数总和-非叶结点数+1。",
+              "rules": "孩子数总和=边数=结点总数-1；结点总数=非叶结点数+叶子数。",
+              "pitfalls": [
+                "忘记把叶子结点计入N"
+              ],
+              "steps": [
+                "统计各度结点数并求孩子数总和",
+                "计算非叶结点数，设总结点数=非叶结点数+叶子数",
+                "用“孩子数总和=总结点数-1”列方程",
+                "解出叶子数"
+              ],
+              "examples": [
+                {
+                  "question": "对于一棵树，每个结点的孩子结点个数称为结点的度，结点度数的最大值称为树的度。某树T的度为4，其中有5个度为4的结点，8个度为3的结点，6个度为2的结点，10个度为1的结点，则T中的叶子结点个数为（ ）。",
+                  "options": [
+                    {
+                      "key": "A",
+                      "text": "28"
+                    },
+                    {
+                      "key": "B",
+                      "text": "32"
+                    },
+                    {
+                      "key": "C",
+                      "text": "38"
+                    },
+                    {
+                      "key": "D",
+                      "text": "42"
+                    }
+                  ],
+                  "answer": "38",
+                  "analysis": "先把已知度的结点都看作“非叶结点”，它们的孩子数总和就是树中的边数。非叶结点数为29，因此结点总数=29+叶子数。利用“边数比结点总数少1”的性质，把孩子数总和与结点总数建立方程即可求出叶子数。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            }
+          ]
+        },
+        {
+          "id": "graph-cc",
+          "name": "图的连通分量",
+          "points": []
+        },
+        {
+          "id": "matrix-compress",
+          "name": "矩阵压缩存储",
+          "points": [
+            {
+              "id": "ds-upper-triangular-row-compress",
+              "title": "上三角矩阵按行压缩存储",
+              "content": "上三角矩阵：只保留主对角线及其上方元素（i≤j）。\n上三角矩阵示意：\nx x x x x\n0 x x x x\n0 0 x x x\n0 0 0 x x\n0 0 0 0 x\n下三角矩阵：保留主对角线及其下方元素（i≥j）。\n下三角矩阵示意：\nx 0 0 0 0\nx x 0 0 0\nx x x 0 0\nx x x x 0\nx x x x x\n按行压缩：按行依次存储每行的上三角元素。",
+              "summary": "上三角与下三角的条件不同，按行压缩要结合k从1开始。",
+              "conclusion": "结论：k = -i^2/2 + (n-1/2)i + j + 1。",
+              "rules": "第i行长度为n−i；k从1开始。",
+              "pitfalls": [
+                "把上三角条件写成i≥j（这是下三角）",
+                "忽略k从1开始的偏移"
+              ],
+              "steps": [
+                "确认k从1开始",
+                "代入A[0][0]应对应B1",
+                "代入A[0][1]应对应B2",
+                "依次筛选确定选项"
+              ],
+              "examples": [
+                {
+                  "question": "对n阶上三角矩阵A按行压缩存储，将元素Aij（0≤i,j＜n且i≤j）存储在B[k]（k≥1）中，则k的值为（）。",
+                  "options": [
+                    {
+                      "key": "A",
+                      "text": "-i^2/2+(n+1/2)i+j-n"
+                    },
+                    {
+                      "key": "B",
+                      "text": "-i^2/2+(n+1/2)i+j-1"
+                    },
+                    {
+                      "key": "C",
+                      "text": "-i^2/2+(n-1/2)i+j"
+                    },
+                    {
+                      "key": "D",
+                      "text": "-i^2/2+(n-1/2)i+j+1"
+                    }
+                  ],
+                  "answer": "D",
+                  "analysis": "图1：B左图（索引）\nB1    B2    B3    B4    B5\n      B6    B7    B8    B9\n            B10   B11   B12\n                  B13   B14\n                        B15\n图2：B右图（元素）\nA00   A01   A02   A03   A04\n      A11   A12   A13   A14\n            A22   A23   A24\n                  A33   A34\n                        A44\n代入A[0][0],A[0][1]分别对应B1,B2，验证选项仅D满足。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "algorithms",
+      "name": "算法",
+      "topics": [
+        {
+          "id": "time-complexity",
+          "name": "时间复杂度比较(O1/On/Onlogn/On²)",
+          "points": []
+        },
+        {
+          "id": "space-complexity",
+          "name": "空间复杂度",
+          "points": []
+        },
+        {
+          "id": "sort-stable",
+          "name": "排序算法稳定性",
+          "points": []
+        },
+        {
+          "id": "binary-search",
+          "name": "二分查找前提条件",
+          "points": []
+        },
+        {
+          "id": "recursion-count",
+          "name": "递归调用次数",
+          "points": []
+        }
+      ]
+    },
+    {
+      "id": "os",
+      "name": "操作系统",
+      "submodules": [
+        {
+          "id": "os-process",
+          "name": "进程",
+          "topics": [
+            {
+              "id": "process-thread",
+              "name": "进程vs线程",
+              "points": []
+            },
+            {
+              "id": "process-state",
+              "name": "进程状态转换图",
+              "points": []
+            },
+            {
+              "id": "critical",
+              "name": "临界区/互斥/同步",
+              "points": []
+            },
+            {
+              "id": "semaphore",
+              "name": "信号量P/V",
+              "points": []
+            },
+            {
+              "id": "deadlock",
+              "name": "死锁四条件及破坏方法",
+              "points": []
+            }
+          ]
+        },
+        {
+          "id": "os-memory",
+          "name": "内存",
+          "topics": [
+            {
+              "id": "paging-seg",
+              "name": "分页vs分段",
+              "points": []
+            },
+            {
+              "id": "page-table",
+              "name": "页表作用",
+              "points": []
+            },
+            {
+              "id": "page-fault",
+              "name": "缺页中断",
+              "points": []
+            },
+            {
+              "id": "page-replacement",
+              "name": "页面置换算法(FIFO/LRU)",
+              "points": []
+            }
+          ]
+        },
+        {
+          "id": "os-file",
+          "name": "文件",
+          "topics": [
+            {
+              "id": "permission",
+              "name": "Linux文件权限rwx",
+              "points": []
+            },
+            {
+              "id": "numeric-perm",
+              "name": "数字权限(666/755)",
+              "points": []
+            },
+            {
+              "id": "chmod",
+              "name": "chmod/chown含义",
+              "points": []
+            },
+            {
+              "id": "umask",
+              "name": "umask",
+              "points": []
+            },
+            {
+              "id": "file-type",
+              "name": "文件类型(-/d/l)",
+              "points": []
+            }
+          ]
+        },
+        {
+          "id": "os-device",
+          "name": "设备",
+          "topics": [
+            {
+              "id": "interrupt",
+              "name": "中断vs轮询",
+              "points": []
+            },
+            {
+              "id": "buffer",
+              "name": "缓冲区作用",
+              "points": []
+            },
+            {
+              "id": "dma",
+              "name": "DMA基本思想",
+              "points": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "organization",
+      "name": "计算机组成原理",
+      "topics": [
+        {
+          "id": "cpu",
+          "name": "CPU组成",
+          "points": []
+        },
+        {
+          "id": "instruction-cycle",
+          "name": "指令周期(取指/执行)",
+          "points": []
+        },
+        {
+          "id": "pipeline",
+          "name": "流水线效率",
+          "points": []
+        },
+        {
+          "id": "cache",
+          "name": "Cache作用",
+          "points": []
+        },
+        {
+          "id": "memory",
+          "name": "主存/辅存区别",
+          "points": [
+            {
+              "id": "org-image-24bit-size",
+              "title": "24位真彩色图像数据量",
+              "content": "24位真彩色表示每像素用24个二进制位表示，常见为RGB三通道各8位。",
+              "summary": "24位=24 bit=3 Byte/像素，是数据量计算的关键换算。",
+              "conclusion": "结论：24位真彩色=3 Byte/像素。",
+              "rules": "1 Byte=8 bit；像素字节数=位数÷8；24位色=3 Byte/像素。",
+              "pitfalls": [
+                "把24位当成24 Byte",
+                "忽略 bit 与 Byte 的换算"
+              ],
+              "steps": [
+                "将24位换算为3 Byte/像素",
+                "用DPI与尺寸计算像素总数",
+                "像素总数乘以3 Byte得到数据量"
+              ],
+              "examples": [
+                {
+                  "question": "使用150DPI的扫描分辨率扫描一幅3×4英寸的彩色照片，得到原始的24位真彩色图像的数据量是（  ）Byte。",
+                  "options": [
+                    {
+                      "key": "A",
+                      "text": "1800"
+                    },
+                    {
+                      "key": "B",
+                      "text": "90000"
+                    },
+                    {
+                      "key": "C",
+                      "text": "270000"
+                    },
+                    {
+                      "key": "D",
+                      "text": "810000"
+                    }
+                  ],
+                  "answer": "D",
+                  "analysis": "24位真彩色=24 bit/像素=3 Byte/像素。像素总数=（3×150）×（4×150）=450×600=270000。数据量=270000×3=810000 Byte。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "db",
+      "name": "数据库",
+      "submodules": [
+        {
+          "id": "db-basic",
+          "name": "基础",
+          "topics": [
+            {
+              "id": "relational",
+              "name": "关系模型概念",
+              "points": []
+            },
+            {
+              "id": "keys",
+              "name": "主键/候选键/外键",
+              "points": []
+            },
+            {
+              "id": "view",
+              "name": "视图作用",
+              "points": []
+            }
+          ]
+        },
+        {
+          "id": "db-sql",
+          "name": "SQL",
+          "topics": [
+            {
+              "id": "select",
+              "name": "select/where/group by",
+              "points": []
+            },
+            {
+              "id": "aggregate",
+              "name": "聚合函数",
+              "points": []
+            },
+            {
+              "id": "having",
+              "name": "having vs where",
+              "points": []
+            },
+            {
+              "id": "join",
+              "name": "简单连接",
+              "points": []
+            }
+          ]
+        },
+        {
+          "id": "db-tx",
+          "name": "事务",
+          "topics": [
+            {
+              "id": "acid",
+              "name": "事务ACID",
+              "points": []
+            },
+            {
+              "id": "concurrency",
+              "name": "并发问题(脏读/不可重复读)",
+              "points": []
+            },
+            {
+              "id": "isolation",
+              "name": "隔离级别",
+              "points": []
+            }
+          ]
+        },
+        {
+          "id": "db-nf",
+          "name": "范式",
+          "topics": [
+            {
+              "id": "nf-judge",
+              "name": "1NF/2NF/3NF判断",
+              "points": []
+            },
+            {
+              "id": "dependency",
+              "name": "部分依赖/传递依赖",
+              "points": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "se",
+      "name": "软件工程",
+      "submodules": [
+        {
+          "id": "se-process",
+          "name": "过程",
+          "topics": [
+            {
+              "id": "models",
+              "name": "瀑布/增量/原型/敏捷模型特点",
+              "points": []
+            },
+            {
+              "id": "usage",
+              "name": "适用场景",
+              "points": []
+            },
+            {
+              "id": "se-ip-rights",
+              "name": "知识产权/署名权",
+              "points": [
+                {
+                  "id": "se-ip-signature-right",
+                  "title": "开发者署名权",
+                  "content": "软件著作权通常归属单位，但开发者依法享有署名权等人格权。署名权不因离职、交接或未参与最终发布而自然消失。",
+                  "summary": "署名权是开发者的人格权，与是否仍在项目组无关。",
+                  "conclusion": "结论：未经开发者同意更改署名，构成侵犯署名权。",
+                  "rules": "单位可享有著作权财产权，但应尊重开发者署名权；名单变更需合法依据或本人同意。",
+                  "pitfalls": [
+                    "以“已离职或不在项目组”为由否定署名权",
+                    "把著作权归属单位与署名权混为一谈"
+                  ],
+                  "steps": [
+                    "确认主体是否为实际开发者",
+                    "区分著作权财产权与署名权人格权",
+                    "判断是否未经同意变更署名",
+                    "据此判断是否构成侵权"
+                  ],
+                  "examples": [
+                    {
+                      "question": "软件公司的软件设计师王某根据工作安排参与了某软件项目的开发，项目进行中王某辞职并将相关开发任务交接给同事李某，因此项目负责人将该软件开发人员名单的王某变更为李某，该软件开发完成后王某也不再署名。那么，该项目负责人的行为（ ）。",
+                      "options": [
+                        {
+                          "key": "A",
+                          "text": "不构成侵权，因为王某不是软件著作权人"
+                        },
+                        {
+                          "key": "B",
+                          "text": "侵犯了王某的软件著作权"
+                        },
+                        {
+                          "key": "C",
+                          "text": "侵犯了王某作为开发者的署名权"
+                        },
+                        {
+                          "key": "D",
+                          "text": "不构成侵权，因为王某已不是项目组成员"
+                        }
+                      ],
+                      "answer": "C",
+                      "analysis": "王某是实际开发者之一，即便离职或交接，署名权仍应得到尊重。负责人擅自更改署名，属于侵犯署名权。"
+                    }
+                  ],
+                  "images": [],
+                  "notes": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "se-req",
+          "name": "需求",
+          "topics": [
+            {
+              "id": "functional",
+              "name": "功能vs非功能需求",
+              "points": []
+            },
+            {
+              "id": "elicitation",
+              "name": "需求获取方法",
+              "points": []
+            },
+            {
+              "id": "change",
+              "name": "需求变更",
+              "points": []
+            }
+          ]
+        },
+        {
+          "id": "se-design",
+          "name": "设计",
+          "topics": [
+            {
+              "id": "design-level",
+              "name": "概要设计vs详细设计",
+              "points": []
+            },
+            {
+              "id": "cohesion",
+              "name": "模块内聚/耦合类型",
+              "points": []
+            }
+          ]
+        },
+        {
+          "id": "se-test",
+          "name": "测试",
+          "topics": [
+            {
+              "id": "black-white",
+              "name": "黑盒vs白盒",
+              "points": []
+            },
+            {
+              "id": "test-phase",
+              "name": "测试阶段顺序",
+              "points": []
+            },
+            {
+              "id": "equivalence",
+              "name": "等价类/边界值",
+              "points": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "uml",
+      "name": "UML",
+      "topics": [
+        {
+          "id": "usecase",
+          "name": "用例图元素",
+          "points": []
+        },
+        {
+          "id": "class-rel",
+          "name": "类图关系(继承/实现/聚合/组合)",
+          "points": []
+        },
+        {
+          "id": "sequence",
+          "name": "顺序图消息",
+          "points": []
+        }
+      ]
+    },
+    {
+      "id": "pattern",
+      "name": "设计模式",
+      "topics": [
+        {
+          "id": "pattern-usage",
+          "name": "单例/工厂/观察者用途",
+          "points": []
+        },
+        {
+          "id": "pattern-type",
+          "name": "结构型vs行为型",
+          "points": []
+        }
+      ]
+    },
+    {
+      "id": "network",
+      "name": "计算机网络",
+      "topics": [
+        {
+          "id": "osi",
+          "name": "OSI七层功能",
+          "points": []
+        },
+        {
+          "id": "tcp-udp",
+          "name": "TCPvsUDP",
+          "points": []
+        },
+        {
+          "id": "handshake",
+          "name": "三次握手",
+          "points": []
+        },
+        {
+          "id": "http",
+          "name": "HTTP状态码",
+          "points": []
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "name": "信息安全",
+      "topics": [
+        {
+          "id": "crypto",
+          "name": "对称vs非对称加密",
+          "points": []
+        },
+        {
+          "id": "hash",
+          "name": "哈希特性",
+          "points": []
+        },
+        {
+          "id": "signature",
+          "name": "数字签名/证书",
+          "points": []
+        }
+      ]
+    },
+    {
+      "id": "prog",
+      "name": "编程基础",
+      "topics": [
+        {
+          "id": "scope",
+          "name": "变量作用域",
+          "points": []
+        },
+        {
+          "id": "pass-by",
+          "name": "值传递vs引用",
+          "points": []
+        },
+        {
+          "id": "recursion-stop",
+          "name": "递归终止条件",
+          "points": []
+        }
+      ]
+    },
+    {
+      "id": "python",
+      "name": "Python",
+      "topics": [
+        {
+          "id": "indent",
+          "name": "缩进规则",
+          "points": []
+        },
+        {
+          "id": "slice",
+          "name": "切片",
+          "points": []
+        },
+        {
+          "id": "list-dict",
+          "name": "list/dict操作",
+          "points": []
+        },
+        {
+          "id": "for-if",
+          "name": "for/if",
+          "points": []
+        },
+        {
+          "id": "none-bool",
+          "name": "None/True/False",
+          "points": []
+        }
+      ]
+    },
+    {
+      "id": "english",
+      "name": "英文关键词",
+      "topics": [
+        {
+          "id": "english",
+          "name": "英文关键词",
+          "type": "glossary",
+          "points": [
+            {
+              "id": "english-availability",
+              "title": "availability",
+              "content": "质量属性之一，关注系统可提供服务的时间比例。",
+              "summary": "可用性；可服务时间比例。",
+              "conclusion": "结论：availability = 可用性。",
+              "rules": "常用表达：可用性=正常运行时间/总时间。",
+              "pitfalls": [
+                "与可靠性混淆：可靠性强调无故障，availability 强调可服务时间",
+                "availability：把性能指标当可用性，题干多给“可用率/停机时间”"
+              ],
+              "steps": [
+                "识别质量属性语境",
+                "关注可服务时间比例",
+                "区分可靠性/可用性"
+              ],
+              "examples": [
+                {
+                  "question": "Availability is 99.9% per year.",
+                  "analysis": "描述系统可服务时间比例。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-usability",
+              "title": "usability",
+              "content": "质量属性之一，关注用户学习成本与操作效率。",
+              "summary": "易用性；使用难易程度。",
+              "conclusion": "结论：usability = 易用性。",
+              "rules": "常见指标：学习时间、出错率、满意度。",
+              "pitfalls": [
+                "usability：与 user-friendly 混淆，后者是描述性用语",
+                "usability：把功能多当易用，易用关注学习成本与出错率"
+              ],
+              "steps": [
+                "识别质量属性语境",
+                "关注学习成本与出错率",
+                "判断是否谈用户体验"
+              ],
+              "examples": [
+                {
+                  "question": "Improve usability by reducing steps.",
+                  "analysis": "减少步骤提升易用性。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-maintainability",
+              "title": "maintainability",
+              "content": "质量属性之一，强调修改、修复与升级的容易程度。",
+              "summary": "可维护性；易修改易修复。",
+              "conclusion": "结论：maintainability = 可维护性。",
+              "rules": "低耦合、高内聚有利于可维护性。",
+              "pitfalls": [
+                "maintainability：把可维护性当可扩展性，可维护性强调修复和修改成本",
+                "maintainability：忽视代码结构与文档对维护的影响"
+              ],
+              "steps": [
+                "识别维护/修复语境",
+                "对应可维护性",
+                "联想到耦合与内聚"
+              ],
+              "examples": [
+                {
+                  "question": "Refactor to improve maintainability.",
+                  "analysis": "重构降低维护成本。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-portability",
+              "title": "portability",
+              "content": "质量属性之一，关注软件跨平台迁移的难易程度。",
+              "summary": "可移植性；跨平台迁移。",
+              "conclusion": "结论：portability = 可移植性。",
+              "rules": "遵循标准接口、减少平台依赖可提升可移植性。",
+              "pitfalls": [
+                "portability：与 compatibility 混淆，后者强调兼容性",
+                "portability：把“安装容易”当可移植，实际强调跨环境迁移"
+              ],
+              "steps": [
+                "识别跨平台语境",
+                "对应可移植性",
+                "关注平台依赖"
+              ],
+              "examples": [
+                {
+                  "question": "Portability across Windows and Linux.",
+                  "analysis": "描述跨平台迁移能力。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-scalability",
+              "title": "scalability",
+              "content": "质量属性之一，强调负载增加时扩充处理能力。",
+              "summary": "可扩展性；负载增长可扩充。",
+              "conclusion": "结论：scalability = 可扩展性。",
+              "rules": "可扩展性关注系统在负载提升时的能力扩充。",
+              "pitfalls": [
+                "scalability：把性能提升当可扩展，性能是当前水平，可扩展是增长能力",
+                "scalability：只看硬件扩容，忽视架构可扩展性"
+              ],
+              "steps": [
+                "识别负载增长语境",
+                "对应可扩展性",
+                "关注扩容方式"
+              ],
+              "examples": [
+                {
+                  "question": "Horizontal scaling improves scalability.",
+                  "analysis": "通过扩容提升系统可扩展性。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-latency",
+              "title": "latency",
+              "content": "性能指标之一，指请求从发出到响应的时间。",
+              "summary": "延迟；响应耗时。",
+              "conclusion": "结论：latency = 延迟。",
+              "rules": "延迟是时间指标，越小越好。",
+              "pitfalls": [
+                "与 throughput 混淆，latency 是单次响应时间",
+                "latency：与 bandwidth 混淆，带宽是传输能力"
+              ],
+              "steps": [
+                "识别性能指标语境",
+                "关注响应时间",
+                "区分吞吐量与带宽"
+              ],
+              "examples": [
+                {
+                  "question": "Low latency is critical for real-time systems.",
+                  "analysis": "实时系统关注低延迟。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-bandwidth",
+              "title": "bandwidth",
+              "content": "性能指标之一，表示单位时间可传输的数据量或信道容量。",
+              "summary": "带宽；传输能力。",
+              "conclusion": "结论：bandwidth = 带宽。",
+              "rules": "带宽高表示传输能力强，但不等于吞吐量。",
+              "pitfalls": [
+                "bandwidth：与 throughput 混淆，吞吐量是实际处理量",
+                "bandwidth：与 latency 混淆，延迟是时间"
+              ],
+              "steps": [
+                "识别网络性能语境",
+                "对应带宽",
+                "区分吞吐量与延迟"
+              ],
+              "examples": [
+                {
+                  "question": "Bandwidth is 100 Mbps.",
+                  "analysis": "描述信道传输能力。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-coupling",
+              "title": "coupling",
+              "content": "软件设计概念，表示模块之间依赖强度。",
+              "summary": "耦合；模块间依赖。",
+              "conclusion": "结论：coupling = 耦合。",
+              "rules": "低耦合更好，降低修改影响范围。",
+              "pitfalls": [
+                "coupling：与 cohesion 混淆，cohesion 是内聚",
+                "coupling：把公共数据当低耦合，实则依赖增多"
+              ],
+              "steps": [
+                "识别设计原则语境",
+                "对应耦合",
+                "记住低耦合更好"
+              ],
+              "examples": [
+                {
+                  "question": "Reduce coupling between modules.",
+                  "analysis": "强调降低模块依赖。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-cohesion",
+              "title": "cohesion",
+              "content": "软件设计概念，表示模块内部功能相关性。",
+              "summary": "内聚；模块内部相关性。",
+              "conclusion": "结论：cohesion = 内聚。",
+              "rules": "高内聚更好，模块职责更单一清晰。",
+              "pitfalls": [
+                "cohesion：与 coupling 混淆，coupling 是模块间依赖",
+                "cohesion：把功能堆砌当高内聚，实际职责不清"
+              ],
+              "steps": [
+                "识别设计原则语境",
+                "对应内聚",
+                "记住高内聚更好"
+              ],
+              "examples": [
+                {
+                  "question": "High cohesion improves maintainability.",
+                  "analysis": "高内聚利于维护。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-abstraction",
+              "title": "abstraction",
+              "content": "面向对象概念，抓住本质特征并隐藏细节。",
+              "summary": "抽象；抓住本质特征。",
+              "conclusion": "结论：abstraction = 抽象。",
+              "rules": "抽象强调“做什么”，实现细节可隐藏。",
+              "pitfalls": [
+                "abstraction：与 encapsulation 混淆，封装强调访问控制",
+                "abstraction：把抽象当具体实现，抽象是概念层次"
+              ],
+              "steps": [
+                "识别面向对象语境",
+                "对应抽象",
+                "区分抽象与封装"
+              ],
+              "examples": [
+                {
+                  "question": "Use interfaces to provide abstraction.",
+                  "analysis": "接口提供抽象层。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-polymorphism",
+              "title": "polymorphism",
+              "content": "面向对象概念，同一接口不同实现。",
+              "summary": "多态；同接口不同实现。",
+              "conclusion": "结论：polymorphism = 多态。",
+              "rules": "运行时多态常由继承+重写实现。",
+              "pitfalls": [
+                "polymorphism：与 overloading 混淆，重载是编译期多态",
+                "polymorphism：把继承当多态，多态需要父类引用指向子类对象"
+              ],
+              "steps": [
+                "识别面向对象语境",
+                "对应多态",
+                "区分重写与重载"
+              ],
+              "examples": [
+                {
+                  "question": "A base class reference calls a derived override.",
+                  "analysis": "体现运行时多态。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-algorithm",
+              "title": "algorithm",
+              "content": "用于描述问题求解步骤与流程，常出现在算法分析与复杂度比较题。",
+              "summary": "算法；可执行的求解步骤。",
+              "conclusion": "结论：algorithm = 算法。",
+              "rules": "强调有限步骤、确定性输入输出与可执行性。",
+              "pitfalls": [
+                "procedure 偏流程描述，strategy 偏思想或策略，algorithm 是可运行的步骤序列",
+                "algorithm：把算法等同程序，程序是算法的具体实现",
+                "题干提“步骤/复杂度/时间代价”多指 algorithm"
+              ],
+              "steps": [
+                "识别语境（算法/流程）",
+                "对应中文术语“算法”",
+                "结合题干判断是否强调复杂度或步骤"
+              ],
+              "examples": [
+                {
+                  "question": "The algorithm runs in O(n log n).",
+                  "analysis": "出现复杂度描述时，algorithm 表示可执行的求解步骤。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-complexity",
+              "title": "complexity",
+              "content": "衡量算法资源消耗的增长趋势，软考多考大小比较与含义辨析。",
+              "summary": "复杂度；资源消耗的增长趋势。",
+              "conclusion": "结论：complexity = 复杂度。",
+              "rules": "常见写法 O(1), O(n), O(n log n), O(n^2)，用于比较增长趋势。",
+              "pitfalls": [
+                "difficulty 是“难度”，complexity 是“复杂度”",
+                "complexity：把具体运行时间当复杂度，复杂度只比较数量级",
+                "complexity：混淆时间/空间复杂度，题干常给“内存/空间”提示"
+              ],
+              "steps": [
+                "判断是否描述复杂度",
+                "对应时间/空间复杂度",
+                "结合题干选择正确表述"
+              ],
+              "examples": [
+                {
+                  "question": "Compare O(n) and O(n log n).",
+                  "analysis": "比较增长趋势，判断哪个更快增长。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-throughput",
+              "title": "throughput",
+              "content": "常见于操作系统与网络性能指标，单位如 req/s、MB/s。",
+              "summary": "吞吐量；单位时间处理量。",
+              "conclusion": "结论：throughput = 吞吐量。",
+              "rules": "吞吐量=单位时间处理量，数值越大表示处理能力越强。",
+              "pitfalls": [
+                "throughput：bandwidth 是带宽，latency 是延迟，不等于吞吐量",
+                "throughput：把单次响应时间当吞吐量，吞吐量关注单位时间总量",
+                "throughput：同等延迟下吞吐量仍可能不同，注意题干单位"
+              ],
+              "steps": [
+                "识别性能指标语境",
+                "对应吞吐量",
+                "区分延迟与带宽"
+              ],
+              "examples": [
+                {
+                  "question": "The server throughput is 200 req/s.",
+                  "analysis": "以单位时间完成请求数衡量处理能力。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-concurrency",
+              "title": "concurrency",
+              "content": "常出现在进程线程与调度场景，强调时间片交替推进。",
+              "summary": "并发；任务交替推进。",
+              "conclusion": "结论：concurrency = 并发。",
+              "rules": "并发强调交替推进；并行强调同一时刻同时执行。",
+              "pitfalls": [
+                "把 concurrency 当 parallelism，后者是多核同刻执行",
+                "concurrency：把并发等同线程数，线程数只是实现手段",
+                "concurrency：单核也可并发，题干出现“时间片/切换”多指并发"
+              ],
+              "steps": [
+                "区分并发/并行",
+                "并发强调时间片交替",
+                "并行强调同时执行"
+              ],
+              "examples": [
+                {
+                  "question": "A single CPU supports concurrency via time slicing.",
+                  "analysis": "单核通过时间片实现并发。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-deadlock",
+              "title": "deadlock",
+              "content": "出现在资源分配场景，软考常考四条件与破坏方法。",
+              "summary": "死锁；相互等待资源。",
+              "conclusion": "结论：deadlock = 死锁。",
+              "rules": "四必要条件：互斥、占有且等待、不可剥夺、循环等待。",
+              "pitfalls": [
+                "deadlock：与饥饿混淆：死锁是相互等待，饥饿是长期得不到资源",
+                "deadlock：只记条件不记破坏方式，软考常考破坏条件",
+                "deadlock：把“资源不足”当死锁，死锁强调循环等待"
+              ],
+              "steps": [
+                "识别资源等待语境",
+                "对应死锁",
+                "联想到四必要条件"
+              ],
+              "examples": [
+                {
+                  "question": "Two processes each hold one lock and wait for the other.",
+                  "analysis": "循环等待导致死锁。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-reliability",
+              "title": "reliability",
+              "content": "质量属性之一，强调长期稳定无故障运行能力。",
+              "summary": "可靠性；无故障运行能力。",
+              "conclusion": "结论：reliability = 可靠性。",
+              "rules": "常用指标：故障率、平均无故障时间(MTBF)。",
+              "pitfalls": [
+                "reliability：与可用性混淆：可用性强调可服务时间比例",
+                "reliability：把可靠性等同性能，二者是不同质量属性",
+                "reliability：题干出现 MTBF/故障率，多指可靠性"
+              ],
+              "steps": [
+                "识别质量属性语境",
+                "对应可靠性",
+                "区分可靠性/可用性"
+              ],
+              "examples": [
+                {
+                  "question": "High reliability means fewer failures over time.",
+                  "analysis": "强调长期稳定无故障。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-encapsulation",
+              "title": "encapsulation",
+              "content": "面向对象三大特性之一，强调接口与访问控制。",
+              "summary": "封装；隐藏实现细节。",
+              "conclusion": "结论：encapsulation = 封装。",
+              "rules": "强调信息隐藏与访问控制，通过接口暴露必要行为。",
+              "pitfalls": [
+                "encapsulation：与继承混淆，封装关注访问控制，继承关注复用",
+                "encapsulation：把封装当模块化，封装强调对象内部细节隐藏",
+                "encapsulation：把“public 成员”当封装，封装强调受控访问"
+              ],
+              "steps": [
+                "识别面向对象语境",
+                "对应封装",
+                "区分封装/继承/多态"
+              ],
+              "examples": [
+                {
+                  "question": "Access fields through getters/setters.",
+                  "analysis": "通过受控接口访问内部状态。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            },
+            {
+              "id": "english-inheritance",
+              "title": "inheritance",
+              "content": "面向对象复用机制，常与组合/聚合对比考查。",
+              "summary": "继承；子类复用父类。",
+              "conclusion": "结论：inheritance = 继承。",
+              "rules": "继承表达 is-a，组合表达 has-a。",
+              "pitfalls": [
+                "inheritance：与组合混淆：继承是 is-a，组合是 has-a",
+                "inheritance：滥用继承导致耦合过高，软考常考优先组合",
+                "inheritance：把聚合/组合当继承，注意关系语义不同"
+              ],
+              "steps": [
+                "识别面向对象语境",
+                "对应继承",
+                "注意与组合/聚合区别"
+              ],
+              "examples": [
+                {
+                  "question": "A Student is a Person.",
+                  "analysis": "体现 is-a 关系。"
+                }
+              ],
+              "images": [],
+              "notes": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

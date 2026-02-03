@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>软考知识库</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3efe6;
+      --bg-ink: #101418;
+      --panel: #fffaf2;
+      --panel-strong: #ffffff;
+      --muted: #5b6472;
+      --line: #e6dfd2;
+      --accent: #0f766e;
+      --accent-soft: #d6f1ec;
+      --warm: #b45309;
+      --shadow: 0 18px 40px rgba(16, 24, 40, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--bg-ink);
+      background: radial-gradient(circle at 20% 20%, #fff6e7 0, transparent 40%),
+        radial-gradient(circle at 80% 0%, #e8f8f4 0, transparent 35%),
+        linear-gradient(135deg, #f6f1e8, #f3efe6 55%, #f5efe4);
+      min-height: 100vh;
+    }
+    .hero {
+      padding: 12px 0 0;
+    }
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .page-title {
+      margin: 0;
+      font-size: 22px;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+      font-weight: 700;
+    }
+    .hero-sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 24px 36px;
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+    .content {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px 20px 28px;
+      box-shadow: var(--shadow);
+    }
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      width: 100%;
+      font-size: 12px;
+      color: var(--muted);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px 12px;
+      margin-bottom: 10px;
+    }
+    .breadcrumb button {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .breadcrumb span { color: #9aa2ad; }
+    .empty-state {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      padding: 12px 0;
+    }
+    .search {
+      position: relative;
+      margin-bottom: 12px;
+      position: sticky;
+      top: 6px;
+      z-index: 20;
+      background: var(--panel);
+      padding: 6px 0;
+    }
+    .search input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 13px;
+      background: #fff;
+    }
+    .search-results {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 6px);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      max-height: 320px;
+      overflow: auto;
+      z-index: 40;
+      display: none;
+    }
+    .search-results.open { display: block; }
+    .search-item {
+      width: 100%;
+      text-align: left;
+      background: #fff;
+      border: none;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      color: #1f2937;
+    }
+    .search-item + .search-item { border-top: 1px solid #f1ebe0; }
+    .search-item:hover { background: #f9f6ef; }
+
+    .module, .submodule, .topic { margin: 0; padding: 0; }
+    .point {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin: 0 0 14px 0;
+      background: var(--panel-strong);
+      position: relative;
+      line-height: 1.75;
+      box-shadow: 0 10px 22px rgba(18, 28, 45, 0.06);
+    }
+    .point-title { display: none; }
+    .point-num { display: none; }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px 0;
+      border-top: 1px dashed #efe6d7;
+      font-size: 13px;
+    }
+    .field.field-first { border-top: none; padding-top: 0; }
+    .field-label {
+      color: var(--warm);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .field-value { color: #2c3442; }
+    .field-value p { margin: 6px 0; }
+    .steps, .pitfalls {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .examples {
+      display: grid;
+      gap: 10px;
+    }
+    .glossary-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #ffffff;
+      margin-bottom: 10px;
+    }
+    .glossary-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      position: relative;
+      padding-right: 28px;
+    }
+    .glossary-term {
+      font-weight: 700;
+      color: #1b1f25;
+    }
+    .glossary-meaning {
+      color: #344053;
+      font-size: 12px;
+      text-align: right;
+    }
+    .glossary-num {
+      position: absolute;
+      right: 0;
+      top: 0;
+      font-size: 11px;
+      color: #0f172a;
+      background: #e8e1d4;
+      border-radius: 8px;
+      padding: 2px 6px;
+      line-height: 1.2;
+    }
+    .glossary-def {
+      font-size: 12px;
+      color: #344053;
+      margin-top: 6px;
+    }
+    .glossary-line {
+      margin: 4px 0;
+    }
+    .example {
+      padding: 10px 12px;
+      background: #f8f4ec;
+      border: 1px solid #efe3d0;
+      border-radius: 8px;
+    }
+    .example-title {
+      font-weight: 700;
+      font-size: 12px;
+      color: #2f3a48;
+      margin-bottom: 4px;
+    }
+    .example-line {
+      font-size: 12px;
+      color: #344053;
+      margin: 4px 0;
+    }
+    .options {
+      display: grid;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .option {
+      text-align: left;
+      border: 1px solid #e7ddcd;
+      background: #fff;
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .option.selected { border-color: #c4b5a5; }
+    .option.correct {
+      border-color: #16a34a;
+      background: #f0fdf4;
+      color: #166534;
+    }
+    .option.wrong {
+      border-color: #dc2626;
+      background: #fef2f2;
+      color: #991b1b;
+    }
+    .option.locked { cursor: not-allowed; opacity: 0.85; }
+    .example-result {
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .example-result.correct { color: #166534; }
+    .example-result.wrong { color: #991b1b; }
+    .images { display: grid; gap: 8px; margin-top: 6px; }
+    .images img { max-width: 100%; border: 1px solid var(--line); border-radius: 8px; }
+    .caption { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .notes { font-size: 12px; color: var(--muted); }
+
+    .drawer-toggle {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      background: #1f2937;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+      z-index: 60;
+    }
+    .scroll-top-fab {
+      position: fixed;
+      right: 16px;
+      bottom: 64px;
+      background: #1f2937;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+      z-index: 60;
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+    .scroll-top-fab.show { display: inline-flex; }
+    .scroll-top-icon {
+      display: inline-block;
+      transform: rotate(-90deg);
+      font-weight: 700;
+      line-height: 1;
+    }
+    .scroll-top-text { font-weight: 600; }
+    .drawer {
+      position: static;
+      display: block;
+      background: none;
+      z-index: 50;
+    }
+    .drawer-panel {
+      position: sticky;
+      top: 16px;
+      height: calc(100vh - 32px);
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      padding: 14px;
+      border-radius: 8px;
+      overflow: auto;
+      box-shadow: var(--shadow);
+    }
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .drawer-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .scroll-top-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 1;
+    }
+    .drawer-header h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+    .close-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .tree { list-style: none; padding-left: 0; margin: 0; }
+    .tree li { margin: 6px 0; }
+    .tree button {
+      width: 100%;
+      border: 1px solid #ebe4d6;
+      background: #f9f6ef;
+      padding: 8px 10px;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: #2b3442;
+    }
+    .tree button.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: #0f3d39;
+      font-weight: 600;
+    }
+    .tree ul { list-style: none; padding-left: 14px; margin: 6px 0 0; }
+    .tree .level-1 { background: #f1ebe0; font-weight: 700; }
+    .tree .level-2 { background: #f9f6ef; }
+    .tree .level-3 { background: #ffffff; font-size: 11px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: #e8e1d4;
+      font-size: 11px;
+      color: #5c6470;
+    }
+
+    @media (max-width: 980px) {
+      .hero { padding: 8px 0 0; }
+      .page-title { font-size: 18px; }
+      .hero-sub { font-size: 11px; }
+      .layout { grid-template-columns: 1fr; padding: 6px 12px 28px; }
+      .content { padding: 14px 14px 22px; }
+      .drawer {
+        position: fixed;
+        inset: 0;
+        display: none;
+        background: rgba(11, 15, 20, 0.45);
+      }
+      .drawer.open { display: block; }
+      .drawer-panel {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 86vw;
+        border-radius: 8px 0 0 8px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+      }
+      .drawer-toggle { display: block; }
+      .close-btn { display: inline-flex; }
+    }
+    @media (min-width: 981px) {
+      .drawer-toggle { display: none; }
+      .close-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1 class="page-title" id="pageTitle">【软件设计师】备考</h1>
+      <p class="hero-sub">以考点大纲为骨架，知识点用纯概念表达，例题与解析紧随其后。</p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="drawer" id="drawer">
+      <div class="drawer-panel">
+      <div class="drawer-header">
+        <h2>目录树</h2>
+        <div class="drawer-actions">
+          <button class="scroll-top-btn" id="scrollTop">↑</button>
+          <button class="close-btn" id="closeDrawer">关闭</button>
+        </div>
+      </div>
+        <ul class="tree" id="tree"></ul>
+      </div>
+    </aside>
+
+    <main class="content" id="book">
+      <div class="breadcrumb" id="breadcrumb">当前位置：未选择</div>
+      <div class="search">
+        <input id="searchInput" type="search" placeholder="搜索知识点/关键词" />
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      <div class="empty-state" id="emptyState" style="display:none;">暂无内容</div>
+      <div id="content"></div>
+    </main>
+  </div>
+
+  <button class="drawer-toggle" id="openDrawer">目录</button>
+  <button class="scroll-top-fab" id="scrollTopFab">
+    <span class="scroll-top-icon">→</span>
+    <span class="scroll-top-text">顶</span>
+  </button>
+
+  <script src="main.js"></script>
+</body>
+</html>
