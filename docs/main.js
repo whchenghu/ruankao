@@ -22,7 +22,12 @@
   }
 
   function countPointsInTopic(topic) {
-    return (topic.points || []).length;
+    return (topic.points || []).reduce(function (sum, p) {
+      if (p && p.type === 'bundle' && p.items && p.items.length) {
+        return sum + p.items.length;
+      }
+      return sum + 1;
+    }, 0);
   }
 
   function countPointsInModule(mod) {
@@ -72,6 +77,14 @@
         var analysisTitle = null;
         var analysisLine = el('div', 'example-line', ex.analysis || '');
         analysisLine.style.display = 'none';
+        var stepsTitle = null;
+        var stepsLine = null;
+        if (ex.steps && ex.steps.length) {
+          stepsTitle = el('div', 'example-title', '解题步骤');
+          stepsLine = stepsBlock(ex.steps);
+          stepsTitle.style.display = 'none';
+          stepsLine.style.display = 'none';
+        }
         var locked = false;
         if (ex.analysis) {
           analysisTitle = el('div', 'example-title', '解析');
@@ -120,6 +133,10 @@
               analysisLine.style.display = 'block';
               if (analysisTitle) analysisTitle.style.display = 'block';
             }
+            if (stepsTitle && stepsLine) {
+              stepsTitle.style.display = 'block';
+              stepsLine.style.display = 'block';
+            }
             locked = true;
             optionsWrap.querySelectorAll('.option').forEach(function (b) {
               b.disabled = true;
@@ -130,6 +147,10 @@
         });
         box.appendChild(optionsWrap);
         box.appendChild(resultLine);
+        if (stepsTitle && stepsLine) {
+          box.appendChild(stepsTitle);
+          box.appendChild(stepsLine);
+        }
         if (ex.analysis) {
           if (analysisTitle) box.appendChild(analysisTitle);
           box.appendChild(analysisLine);
@@ -138,6 +159,10 @@
         if (ex.answer) {
           box.appendChild(el('div', 'example-title', '答案'));
           box.appendChild(el('div', 'example-line', ex.answer));
+        }
+        if (ex.steps && ex.steps.length) {
+          box.appendChild(el('div', 'example-title', '解题步骤'));
+          box.appendChild(stepsBlock(ex.steps));
         }
         if (ex.analysis) {
           box.appendChild(el('div', 'example-title', '解析'));
@@ -214,6 +239,7 @@
   }
 
   function renderPoint(p, idx) {
+    if (p && p.type === 'bundle') return renderBundle(p, idx);
     var point = el('div', 'point');
     if (p.id) point.id = 'point-' + p.id;
     void idx;
@@ -235,6 +261,59 @@
     if (p.examples && p.examples.length) addField(fieldBlock('例题', examplesBlock(p.examples)));
     if (p.images && p.images.length) addField(fieldBlock('图片', imagesField(p.images)));
     if (p.notes && p.notes.length) addField(fieldBlock('备注', notesField(p.notes)));
+
+    return point;
+  }
+
+  function renderBundle(p, idx) {
+    var point = el('div', 'point');
+    if (p.id) point.id = 'point-' + p.id;
+    void idx;
+
+    (p.items || []).forEach(function (item, itemIdx) {
+      var itemWrap = el('div', 'bundle-item');
+      if (item.title) itemWrap.appendChild(el('div', 'bundle-item-title', item.title));
+      var fieldIndex = 0;
+      function addItemField(node) {
+        if (!node) return;
+        if (fieldIndex === 0) node.classList.add('field-first');
+        fieldIndex += 1;
+        itemWrap.appendChild(node);
+      }
+      if (item.content) addItemField(fieldBlock('概念', contentBlock(item.content)));
+      if (item.summary) addItemField(fieldBlock('总结', item.summary));
+      if (item.conclusion) addItemField(fieldBlock('结论', item.conclusion));
+      if (item.rules) addItemField(fieldBlock('规则', item.rules));
+      if (item.pitfalls && item.pitfalls.length) addItemField(fieldBlock('易错点', pitfallsBlock(item.pitfalls)));
+      point.appendChild(itemWrap);
+      void itemIdx;
+    });
+
+    if (p.examples && p.examples.length) {
+      var exWrap = el('div', 'bundle-examples');
+      var itemOrder = (p.items || []).map(function (it) { return it.id; });
+      var itemTitles = {};
+      (p.items || []).forEach(function (it) { itemTitles[it.id] = it.title || ''; });
+      var grouped = {};
+      p.examples.forEach(function (ex) {
+        var key = ex.itemId || '_';
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(ex);
+      });
+      itemOrder.forEach(function (itemId) {
+        var list = grouped[itemId];
+        if (!list || !list.length) return;
+        if (itemTitles[itemId]) exWrap.appendChild(el('div', 'bundle-example-title', itemTitles[itemId]));
+        exWrap.appendChild(examplesBlock(list));
+      });
+      if (grouped._ && grouped._.length) {
+        exWrap.appendChild(el('div', 'bundle-example-title', '其他'));
+        exWrap.appendChild(examplesBlock(grouped._));
+      }
+      point.appendChild(fieldBlock('例题', exWrap));
+    }
+    if (p.images && p.images.length) point.appendChild(fieldBlock('图片', imagesField(p.images)));
+    if (p.notes && p.notes.length) point.appendChild(fieldBlock('备注', notesField(p.notes)));
 
     return point;
   }
@@ -455,14 +534,26 @@
         mod.submodules.forEach(function (sub) {
           sub.topics.forEach(function (topic) {
             (topic.points || []).forEach(function (p) {
-              items.push(makeSearchItem(mod, sub, topic, p));
+              if (p && p.type === 'bundle' && p.items && p.items.length) {
+                p.items.forEach(function (item) {
+                  items.push(makeSearchItem(mod, sub, topic, p, item));
+                });
+              } else {
+                items.push(makeSearchItem(mod, sub, topic, p));
+              }
             });
           });
         });
       } else {
         mod.topics.forEach(function (topic) {
           (topic.points || []).forEach(function (p) {
-            items.push(makeSearchItem(mod, null, topic, p));
+            if (p && p.type === 'bundle' && p.items && p.items.length) {
+              p.items.forEach(function (item) {
+                items.push(makeSearchItem(mod, null, topic, p, item));
+              });
+            } else {
+              items.push(makeSearchItem(mod, null, topic, p));
+            }
           });
         });
       }
@@ -474,21 +565,39 @@
     return String(text || '').toLowerCase();
   }
 
-  function makeSearchItem(mod, sub, topic, p) {
+  function makeSearchItem(mod, sub, topic, p, item) {
     var labelParts = [mod.name];
     if (sub) labelParts.push(sub.name);
     if (topic) labelParts.push(topic.name);
-    var title = p.title || '';
+    var title = '';
+    if (item) {
+      title = item.title || '';
+    } else {
+      title = p.title || '';
+    }
     var label = labelParts.join(' / ') + (title ? ' · ' + title : '');
+    var examplesText = '';
+    if (p && p.type === 'bundle') {
+      var exList = (p.examples || []).filter(function (ex) {
+        if (!item || !item.id) return true;
+        return ex.itemId === item.id;
+      });
+      examplesText = exList.map(function (ex) {
+        return [ex.question, ex.answer, (ex.steps || []).join(' '), ex.analysis].join(' ');
+      }).join(' ');
+    } else {
+      examplesText = (p.examples || []).map(function (ex) {
+        return [ex.question, ex.answer, (ex.steps || []).join(' '), ex.analysis].join(' ');
+      }).join(' ');
+    }
     var fields = [
-      p.title,
-      p.summary,
-      p.content,
-      p.conclusion,
-      p.rules,
-      (p.pitfalls || []).join(' '),
-      (p.steps || []).join(' '),
-      (p.examples || []).map(function (ex) { return [ex.question, ex.answer, ex.analysis].join(' '); }).join(' ')
+      item ? item.title : p.title,
+      item ? item.summary : p.summary,
+      item ? item.content : p.content,
+      item ? item.conclusion : p.conclusion,
+      item ? item.rules : p.rules,
+      item ? (item.pitfalls || []).join(' ') : (p.pitfalls || []).join(' '),
+      examplesText
     ].join(' ');
     return {
       label: label,

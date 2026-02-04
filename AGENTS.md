@@ -62,20 +62,29 @@
 - Point:
   - id?, title
   - content?, summary?, conclusion?
-  - rules?, steps?, pitfalls?
-  - examples?: [{ question, options?, answer?, analysis? }]
+  - rules?, pitfalls?
   - images?: [{ src, alt?, caption? }]
   - notes?: [string]
+  - type?: "point" | "glossary" | "bundle"
+  - items?: Item[] （当 type="bundle" 时使用）
+  - examples?: [{ itemId?, question, options?, answer?, steps?, analysis? }]
+- Item:
+  - id?, title
+  - content?, summary?, conclusion?
+  - rules?, pitfalls?
 
 ## 六、更新规则（JSON 方式）
 - 例题与知识点内容必须分离：题干只放在 examples 中
+- 同一考点的知识点内容必须合并为一个展示块时，使用 `type: "bundle"`，内容放在 `items`
+- `items` 只放概念内容（概念/总结/结论/规则/易错点），不得放解题步骤或题目
+- 例题统一放在 bundle 的 `examples` 中，用 `itemId` 关联内容块；`steps` 只允许出现在例题中
 - 选择题可在 examples 中加入 options（数组），用于做题交互展示
 - 有 options 的例题需支持做题：作答后显示正确答案与解析，且不可再次修改答案
-- 任何新增/修改必须只改 `data.json`
+- 常规内容维护只改 `data.json`；如结构升级涉及渲染逻辑，需同步更新前端
 - 新增知识点追加到对应子考点的 `points` 数组头部
 - 不得重排模块/子模块/子考点顺序
 - 图片放在 `imgs/` 下，JSON 中使用相对路径，如 `imgs/xxx.png`
-- 叶子节点可加 `type` 控制渲染：`point`（默认）或 `glossary`
+- 叶子节点可加 `type` 控制渲染：`point`（默认）或 `glossary` 或 `bundle`
 
 ## 七、对话使用说明
 - 你会在新窗口直接发题或说“按规范追加”
